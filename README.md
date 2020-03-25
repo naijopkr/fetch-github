@@ -16,12 +16,12 @@ $ npm install
 ## Usage
 
 ```
-$ node github.js -u <github_username>
+$ node . -u <github_username>
 ```
 
 You can set the output file name using the flag `-o`
 ```
-$ node github.js -u <github_username> -o <filename.json>
+$ node . -u <github_username> -o <filename.json>
 ```
 
 Have fun! If you have any trouble, please contact me.
