@@ -1,7 +1,15 @@
 const fs = require('fs')
 const fetch = require('node-fetch')
 
-fetch('https://api.github.com/users/naijopkr/repos?type=owner&sort=updated&per_page=100')
+const help = () => {
+    console.log('node github.js -u <username>')
+    console.log()
+    console.log('\t-u\tGithub username to fetch public repos')
+    console.log()
+}
+
+const fetchGithub = (user) => {
+    fetch(`https://api.github.com/users/${user}/repos?type=owner&sort=updated&per_page=100`)
     .then(res => {
         res.json().then(body => {
             const repos = {
@@ -33,3 +41,19 @@ fetch('https://api.github.com/users/naijopkr/repos?type=owner&sort=updated&per_p
             })
         })
     })
+}
+
+if (!module.parent) {
+    process.argv.forEach((value, index, array) => {
+        switch(value) {
+            case '-h':
+                help()
+                break
+            case '-u':
+                fetchGithub(array[index + 1])
+                break
+            default:
+                break
+        }
+    })
+}
