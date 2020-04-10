@@ -2,10 +2,10 @@ const fs = require('fs')
 const fetch = require('node-fetch')
 
 const help = () => {
-    console.log('Usage: node github.js -u <username> [-o <filename>]')
+    console.log('Usage: node . -u <username> [-o <filename>]')
     console.log()
     console.log('\t-u\tGithub username to fetch public repos')
-    console.log('\t-o\tFilename to save the data fetched')
+    console.log('\t-o\tFilename to save the data fetched (optional).\n\t\tIf no filename is provided the data will be saved on github_repos.json')
     console.log()
 }
 
@@ -47,25 +47,25 @@ const fetchGithub = (user, filename = 'github_repos.json') => {
 if (!module.parent) {
     if (process.argv.indexOf('-h') !== -1) {
         help()
-    }
+    } else {
+        try {
+            const userIndex = process.argv.indexOf('-u')
+            const username = userIndex > -1 && process.argv[userIndex + 1]
 
-    try {
-        const userIndex = process.argv.indexOf('-u')
-        const username = userIndex > -1 && process.argv[userIndex + 1]
+            const fileIndex = process.argv.indexOf('-o')
+            const filename = fileIndex > -1
+                ? process.argv[fileIndex + 1]
+                : undefined
 
-        const fileIndex = process.argv.indexOf('-o')
-        const filename = fileIndex > -1
-            ? process.argv[fileIndex + 1]
-            : undefined
+            if (!username) {
+                throw new Error('No username provided')
+            }
 
-        if (!username) {
-            throw new Error('No username provided')
+            fetchGithub(username, filename)
+
+        } catch (err) {
+            console.log('Error: ', err.message)
+            help()
         }
-
-        fetchGithub(username, filename)
-
-    } catch (err) {
-        console.log('Error: ', err.message)
-        help()
     }
 }
